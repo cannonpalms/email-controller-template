@@ -1,0 +1,12 @@
+apiVersion: hiring.influxdata.io/v1alpha1
+kind: EmailRequest
+metadata:
+  labels:
+    app.kubernetes.io/name: emailrequest
+    app.kubernetes.io/instance: emailrequest-sample
+    app.kubernetes.io/part-of: email-controller
+    app.kubernetes.io/managed-by: kustomize
+    app.kubernetes.io/created-by: email-controller
+  name: emailrequest-sample
+spec:
+  # TODO(user): Add fields here

@@ -1,0 +1,31 @@
+# permissions for end users to edit emailrequests.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: clusterrole
+    app.kubernetes.io/instance: emailrequest-editor-role
+    app.kubernetes.io/component: rbac
+    app.kubernetes.io/created-by: email-controller
+    app.kubernetes.io/part-of: email-controller
+    app.kubernetes.io/managed-by: kustomize
+  name: emailrequest-editor-role
+rules:
+- apiGroups:
+  - hiring.influxdata.io
+  resources:
+  - emailrequests
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - hiring.influxdata.io
+  resources:
+  - emailrequests/status
+  verbs:
+  - get
