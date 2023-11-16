@@ -1,10 +1,39 @@
 # email-controller
-// TODO(user): Add simple overview of use/purpose
 
-## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+Using this project as your skeleton, write a kubernetes controller that will send an email. Then, write a script that process the provided `contacts.csv` file and utilizes the API & controller you've built to send an email to each contact.
 
-## Getting Started
+You will need to design your API (see `./api/v1alpha1/emailrequest_types.go`) and implement the `EmailRequest` controller (`./internal/controller/emailrequest_controller.go`). 
+
+To each contact, send an email with a subject of `Hello` and a body of `Hello, {name}!`. 
+
+A fake email service has been provided for you to use in your controller (`./pkg/fakeemail`). 
+
+We expect that you will spend roughly 2 hours on this assignment, but please spend no more than 4 hours. An incomplete submission followed-up with good answers in the first interview round is better than a perfect submission and poor answers during the interview.
+
+## Requirements
+- Each email must be sent at most once
+- EmailRequests should have configurable retry behavior that applies to retriable errors
+- Emails that are "bounced" should be treated as permanent failures and not retried.
+- Emails that are "blocked" should be treated as temporary failures and retried based on the configured retry behavior.
+- Invalid email addresses should be treated as permanent failures and not retried.
+- Your status API for `EmailRequest` should include status conditions that indicate whether the email has been sent successfully (among any other status information you deem important to expose)
+
+## Bonus points
+
+Submissions that go "above and beyond" might include any or all of the following. Do note that this is optional, but encouraged, based on your available time.
+- Regex-based validation of email addresses at the API level. This could be via kubebuilder markers or via a validating webhook. You can use the same regex that the fakeemail service uses: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$` 
+- Tests that cover your controller's retry semantics and status API. See the [kubebuilder docs](https://book.kubebuilder.io/cronjob-tutorial/writing-tests) on writing tests for guidance.
+
+
+## Next steps
+
+When you have completed the assignment, please return your full implementation (the entire repo) in a zip file. A follow-up interview will then be scheduled; in this interview, among other things, we will discuss the decisions you made in your submission and what motivated these decisions.
+
+
+--------------------
+
+
+## Running the controller 
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
 **Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
 
@@ -40,9 +69,6 @@ UnDeploy the controller from the cluster:
 ```sh
 make undeploy
 ```
-
-## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
 
 ### How it works
 This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
