@@ -6,7 +6,7 @@ You will need to design your API (see `./api/v1alpha1/emailrequest_types.go`) an
 
 To each contact, send an email with a subject of `Hello` and a body of `Hello, {name}!`. 
 
-A fake email service has been provided for you to use in your controller (`./pkg/fakeemail`). 
+A fake email service has been provided for you to use in your controller (`./pkg/fakeemail`). **Do NOT modify the fake email client.**
 
 We expect that you will spend roughly 2 hours on this assignment, but please spend no more than 4 hours. An incomplete submission followed-up with good answers in the first interview round is better than a perfect submission and poor answers during the interview.
 
