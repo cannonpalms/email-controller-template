@@ -12,7 +12,7 @@ We expect that you will spend roughly 2 hours on this assignment, but please spe
 
 ## Requirements
 - Each email must be sent at most once
-- EmailRequests should have configurable retry behavior that applies to retriable errors. This must be configurable at the EmailRequest level, not controller-wide.
+- EmailRequests should have configurable retry behavior that applies to retriable errors. This must be configurable at the API level, not controller-wide.
 - Emails that are "bounced" should be treated as permanent failures and not retried.
 - Emails that are "blocked" should be treated as temporary failures and retried based on the configured retry behavior.
 - Invalid email addresses should be treated as permanent failures and not retried.
