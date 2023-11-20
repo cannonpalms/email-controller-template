@@ -32,7 +32,11 @@ func main() {
 	}
 
 	// Simulate sending an email.
-	err = emailService.Send("recipient@example.com", "Hello", "This is a test email.")
+	emailID, err := emailService.Send(fakeemail.Email{
+		DestinationAddress: "recipient@example.com",
+		Subject:            "Hello",
+		Body:               "This is a test email.",
+	})
 	if err != nil {
 		switch {
 		case err.(*fakeemail.ErrInvalidEmailAddress) != nil:
@@ -45,4 +49,6 @@ func main() {
 			fmt.Printf("Error: %v\n", err)
 		}
 	}
+
+	fmt.Printf("Consistent identifier for this email: %v", emailID)
 }

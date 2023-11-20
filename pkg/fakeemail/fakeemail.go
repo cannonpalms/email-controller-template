@@ -75,35 +75,44 @@ func DefaultEmailService() *EmailService {
 }
 
 // Send logs the email's body to the console and may simulate email bouncing or blocking.
-func (es *EmailService) Send(destination, subject, body string) error {
-	if !isValidEmail(destination) {
-		return &ErrInvalidEmailAddress{Email: destination}
+// Now accepts an Email and always returns an EmailIdentifier and an error.
+func (es *EmailService) Send(email Email) (EmailIdentifier, error) {
+	// Always compute the EmailIdentifier using the Hash method of the Email type.
+	// We return the EmailIdentifier even if the destination address is invalid, the email is blocked,
+	// or the email bounces
+	id := email.ID()
+
+	if !isValidEmail(email) {
+		if es.Logger != nil {
+			es.Logger.Printf("Invalid email address: %s\n", email.DestinationAddress)
+		}
+		return id, &ErrInvalidEmailAddress{Email: email.DestinationAddress}
 	}
 
 	if shouldSimulate(es.BounceRate) {
 		if es.Logger != nil {
-			es.Logger.Printf("Simulating email bounce: %s\n", destination)
+			es.Logger.Printf("Simulating email bounce: %s\n", email.DestinationAddress)
 		}
-		return &ErrEmailBounced{Email: destination}
+		return id, &ErrEmailBounced{Email: email.DestinationAddress}
 	}
 
 	if shouldSimulate(es.BlockRate) {
 		if es.Logger != nil {
-			es.Logger.Printf("Simulating email block: %s\n", destination)
+			es.Logger.Printf("Simulating email block: %s\n", email.DestinationAddress)
 		}
-		return &ErrEmailBlocked{Email: destination}
+		return id, &ErrEmailBlocked{Email: email.DestinationAddress}
 	}
 
-	logEmail(es.Logger, destination, subject, body)
-	return nil
+	logEmail(es.Logger, email.DestinationAddress, email.Subject, email.Body)
+	return id, nil
 }
 
-// isValidEmail checks if the given email address is valid.
-func isValidEmail(email string) bool {
+// isValidEmail checks if the given destination email address is valid.
+func isValidEmail(email Email) bool {
 	// Basic email validation using a regular expression.
 	// This is a simple example, and you may want to use a more robust approach in a real-world scenario.
 	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
-	return emailRegex.MatchString(email)
+	return emailRegex.MatchString(email.DestinationAddress)
 }
 
 // logEmail logs the email details to the console.
