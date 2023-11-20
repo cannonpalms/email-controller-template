@@ -11,18 +11,21 @@ A fake email service has been provided for you to use in your controller (`./pkg
 We expect that you will spend roughly 2 hours on this assignment, but please spend no more than 4 hours. An incomplete submission followed-up with good answers in the first interview round is better than a perfect submission and poor answers during the interview.
 
 ## Requirements
-- Each email must be sent at most once
-- EmailRequests should have configurable retry behavior that applies to retriable errors. This must be configurable at the API level, not controller-wide.
+- Each email must be sent at most once, including in the face of network failures, program panics, or runtime errors.
+  - You can ignore cases such as power loss, OOMKill, and other unexpected shutdown events.
+- EmailRequests should have configurable exponential-backoff retry behavior that applies to retriable errors. This should be configurable on a per-EmailRequest basis rather than via controller-wide configuration. (Hint: Design the EmailRequest API well!)
+  - The base delay and maximum delay components of your exponential backoff behavior must be configurable. You can ignore jitter.
 - Emails that are "bounced" should be treated as permanent failures and not retried.
 - Emails that are "blocked" should be treated as temporary failures and retried based on the configured retry behavior.
 - Invalid email addresses should be treated as permanent failures and not retried.
-- Your status API for `EmailRequest` should include status conditions that indicate whether the email has been sent successfully (among any other status information you deem important to expose)
+- Your status API for `EmailRequest` should include [status conditions](https://pkg.go.dev/k8s.io/apimachinery/pkg/apis/meta/v1#Condition) that indicate whether the email has been sent successfully (among any other status information you deem important to expose).
 
 ## Bonus points
 
 Submissions that go "above and beyond" might include any or all of the following. Do note that this is optional, but encouraged, based on your available time.
-- Regex-based validation of email addresses at the API level. This could be via kubebuilder markers or via a validating webhook. You can use the same regex that the fakeemail service uses: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$` 
 - Tests that cover your controller's retry semantics and status API. See the [kubebuilder docs](https://book.kubebuilder.io/cronjob-tutorial/writing-tests) on writing tests for guidance.
+- Regex-based validation of email addresses at the API level. This could be via kubebuilder markers or via a validating webhook. You can use the same regex that the fakeemail service uses: `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+  - NOTE: if you implement this, your controller should still handle invalid email address errors from the fake email service, regardless of whether or not you are catching them via the same regex at the API level.
 
 
 ## Next steps
