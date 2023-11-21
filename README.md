@@ -40,44 +40,18 @@ When you have completed the assignment, please return your full implementation (
 You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
 **Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
 
-### Running on the cluster
-1. Install Instances of Custom Resources:
-
+Create a kind cluster:
 ```sh
-kubectl apply -k config/samples/
+kind create cluster -n influxdata-test
 ```
 
-2. Build and push your image to the location specified by `IMG`:
+### Building the project
+You can lint, compile, and perform all appropriate code-generation with the default make target. This target name is not required, but you can also refer to the target
+by name with either `make all` or `make build`.
 
 ```sh
-make docker-build docker-push IMG=<some-registry>/email-controller:tag
+make 
 ```
-
-3. Deploy the controller to the cluster with the image specified by `IMG`:
-
-```sh
-make deploy IMG=<some-registry>/email-controller:tag
-```
-
-### Uninstall CRDs
-To delete the CRDs from the cluster:
-
-```sh
-make uninstall
-```
-
-### Undeploy controller
-UnDeploy the controller from the cluster:
-
-```sh
-make undeploy
-```
-
-### How it works
-This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/).
-
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/),
-which provide a reconcile function responsible for synchronizing resources until the desired state is reached on the cluster.
 
 ### Test It Out
 1. Install the CRDs into the cluster:
@@ -100,6 +74,8 @@ If you are editing the API definitions, generate the manifests such as CRs or CR
 ```sh
 make manifests
 ```
+
+You will then need to re-run `make install` to apply any generated changes to your CRDs.
 
 **NOTE:** Run `make --help` for more information on all potential `make` targets
 
